@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check out our authors!</title>
+</head>
+<body>
+    <h1>Check out our authors!</h1>
+
+    <ul>
+    {% for item in result_list %}
+        <li>{{ item.nombre}} {{ item.apellido }}</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
