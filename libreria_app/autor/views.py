@@ -32,7 +32,15 @@ class AutorViewSet(ModelViewSet):
     serializer_class = AutorSerializer
     
     def update(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        
+        return Response(serializer.data)
+
+
 
 # class AutorRetrieveAPIView(generics.RetrieveAPIView):
 #     queryset = Autor.objects.all()
