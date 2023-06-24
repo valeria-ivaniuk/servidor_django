@@ -3,20 +3,49 @@ from django.http import HttpResponse
 from .models import Autor
 from .serializer import AutorSerializer
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from .models import Autor
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework import permissions, authentication
 # Create your views here.
 
-class AutorRetrieveAPIView(generics.RetrieveAPIView):
-    queryset = Autor.objects.all()
-    serializer_class = AutorSerializer
+class AutorAPIView(APIView):
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
 
-class AutorListCreateAPIView(generics.ListCreateAPIView):
+    def get(self,request):
+        autores = Autor.objects.all()
+        serializer = AutorSerializer(productos, many=True)
+        
+        return Response(serializer.data)
+    def post(self,request):
+        serializer = AutorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+            return Response(serializer.errors)
+    
+class AutorViewSet(ModelViewSet):
     queryset = Autor.objects.all()
     serializer_class = AutorSerializer
+    
+    def update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-class AutorUpdateAPIView(generics.UpdateAPIView):
-    queryset = Autor.objects.all()
-    serializer_class = AutorSerializer
+# class AutorRetrieveAPIView(generics.RetrieveAPIView):
+#     queryset = Autor.objects.all()
+#     serializer_class = AutorSerializer
 
-class AutorDestroyAPIView(generics.DestroyAPIView):
-    queryset = Autor.objects.all()
-    serializer_class = AutorSerializer
+# class AutorListCreateAPIView(generics.ListCreateAPIView):
+#     queryset = Autor.objects.all()
+#     serializer_class = AutorSerializer
+
+# class AutorUpdateAPIView(generics.UpdateAPIView):
+#     queryset = Autor.objects.all()
+#     serializer_class = AutorSerializer
+
+# class AutorDestroyAPIView(generics.DestroyAPIView):
+#     queryset = Autor.objects.all()
+#     serializer_class = AutorSerializer
